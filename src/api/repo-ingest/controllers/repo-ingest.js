@@ -12,17 +12,17 @@ const repoIngestController = {
   options: {
     validate: {
       payload: Joi.object({
-        repository_url: Joi.string()
+        repositoryUrl: Joi.string()
           .uri()
           .required()
           .description('GitHub repository URL'),
         compress: Joi.boolean()
           .description('Whether to compress the code to reduce token count')
           .default(false),
-        remove_comments: Joi.boolean()
+        removeComments: Joi.boolean()
           .description('Whether to remove comments from the code')
           .default(false),
-        remove_empty_lines: Joi.boolean()
+        removeEmptyLines: Joi.boolean()
           .description('Whether to remove empty lines from the code')
           .default(false)
       }).required(),
@@ -33,16 +33,16 @@ const repoIngestController = {
   },
   handler: async (request, h) => {
     try {
-      const { repository_url, compress, remove_comments, remove_empty_lines } =
+      const { repositoryUrl, compress, removeComments, removeEmptyLines } =
         request.payload
 
       const options = {
         compress,
-        removeComments: remove_comments,
-        removeEmptyLines: remove_empty_lines
+        removeComments,
+        removeEmptyLines
       }
 
-      const result = await executeRepomix(repository_url, options)
+      const result = await executeRepomix(repositoryUrl, options)
 
       return h
         .response({
