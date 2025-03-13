@@ -22,6 +22,7 @@
     "lint:js": "eslint --cache .",
     "lint:types": "tsc --build tsconfig.json",
     "postversion": "git add package.json package-lock.json && git commit -m $npm_package_version",
+    "repomix": "repomix",
     "test": "jest --coverage --verbose --runInBand",
     "test:watch": "jest --watch",
     "server:watch": "nodemon --exec tsx --enable-source-maps ./src",
@@ -52,6 +53,7 @@
     "node-fetch": "^3.3.2",
     "pino": "^9.5.0",
     "pino-pretty": "^13.0.0",
+    "repomix": "^0.2.38",
     "undici": "^6.20.1"
   },
   "devDependencies": {

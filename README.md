@@ -105,11 +105,87 @@ git config --global core.autocrlf false
 
 ## API endpoints
 
-| Endpoint             | Description                    |
-| :------------------- | :----------------------------- |
-| `GET: /health`       | Health                         |
-| `GET: /example    `  | Example API (remove as needed) |
-| `GET: /example/<id>` | Example API (remove as needed) |
+| Endpoint                    | Description                    |
+| :-------------------------- | :----------------------------- |
+| `GET: /health`              | Health                         |
+| `GET: /example`             | Example API (remove as needed) |
+| `GET: /example/<id>`        | Example API (remove as needed) |
+| `POST: /api/v1/repo-ingest` | Repository ingestion API       |
+
+### Repository Ingestion API
+
+The repo-ingest API endpoint allows users to process GitHub repositories using the repomix tool.
+
+#### Request
+
+```
+POST /api/v1/repo-ingest
+Content-Type: application/json
+
+{
+  "repository_url": "https://github.com/username/repository",
+  "compress": false,
+  "remove_comments": false,
+  "remove_empty_lines": false
+}
+```
+
+| Field              | Type    | Description                                    | Required | Default |
+| ------------------ | ------- | ---------------------------------------------- | -------- | ------- |
+| repository_url     | string  | The URL of the GitHub repository               | Yes      | -       |
+| compress           | boolean | Whether to compress code to reduce token count | No       | false   |
+| remove_comments    | boolean | Whether to remove comments from the code       | No       | false   |
+| remove_empty_lines | boolean | Whether to remove empty lines from the code    | No       | false   |
+
+#### Response
+
+**Success Response**
+
+```json
+{
+  "message": "Repository successfully processed",
+  "data": {
+    "outputPath": "/path/to/output/file.txt",
+    "content": "Repository content in repomix format"
+  }
+}
+```
+
+**Error Response**
+
+```json
+{
+  "statusCode": 400,
+  "error": "Bad Request",
+  "message": "Validation error: repository_url is required"
+}
+```
+
+#### Example Usage
+
+```bash
+# Basic usage
+curl -X POST \
+  http://localhost:3555/api/v1/repo-ingest \
+  -H "Content-Type: application/json" \
+  -d '{"repository_url": "https://github.com/DEFRA/find-ffa-data-ingester"}'
+
+# With compression and comment removal
+curl -X POST \
+  http://localhost:3555/api/v1/repo-ingest \
+  -H "Content-Type: application/json" \
+  -d '{
+    "repository_url": "https://github.com/DEFRA/find-ffa-data-ingester",
+    "compress": true,
+    "remove_comments": true
+  }'
+```
+
+#### Implementation Details
+
+This endpoint uses the [repomix](https://github.com/yamadashy/repomix) tool to process GitHub repositories. The tool is executed as a child process with the `--remote` option to process remote repositories. A dynamically generated configuration file is used to customize the repomix behavior based on the API request parameters.
+
+For more details on the available configuration options, see the [repomix configuration documentation](https://repomix.com/guide/configuration).
 
 ## Development helpers
 
