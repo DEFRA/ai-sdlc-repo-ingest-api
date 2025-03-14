@@ -18,10 +18,10 @@ const repoIngestController = {
           .description('GitHub repository URL'),
         compress: Joi.boolean()
           .description('Whether to compress the code to reduce token count')
-          .default(false),
+          .default(true),
         removeComments: Joi.boolean()
           .description('Whether to remove comments from the code')
-          .default(false),
+          .default(true),
         removeEmptyLines: Joi.boolean()
           .description('Whether to remove empty lines from the code')
           .default(false)
@@ -46,8 +46,8 @@ const repoIngestController = {
 
       return h
         .response({
-          message: 'Repository successfully processed',
-          data: result
+          ingestedRepository: result.content,
+          technologies: []
         })
         .code(statusCodes.ok)
     } catch (error) {
