@@ -59,6 +59,7 @@ async function createRepomixConfig(repositoryUrl, outputFile) {
  * @param {boolean} options.compress - Whether to compress the code to reduce token count
  * @param {boolean} options.removeComments - Whether to remove comments from the code
  * @param {boolean} options.removeEmptyLines - Whether to remove empty lines from the code
+ * @param {string|string[]} options.include - File paths to include (as a string or array)
  * @returns {Promise<{outputPath: string, content: string}>} The result of the repomix execution
  * @throws {Error} If there's an error during execution
  */
@@ -103,6 +104,16 @@ export const executeRepomix = async (repositoryUrl, options = {}) => {
 
     if (options.removeEmptyLines !== undefined) {
       config.output.removeEmptyLines = options.removeEmptyLines
+    }
+
+    if (options.include !== undefined) {
+      // Handle include option as either string or array
+      if (typeof options.include === 'string') {
+        // If it's a comma-delimited string, split it into an array of file paths
+        config.include = options.include.split(',').map((path) => path.trim())
+      } else if (Array.isArray(options.include)) {
+        config.include = options.include
+      }
     }
 
     await fs.writeFile(configFile, JSON.stringify(config, null, 2))
