@@ -6,10 +6,10 @@ The purpose of this project is to extend an existing Node.js API by adding a new
 
 ## Data Model Reference
 
-- **repository_url**: *string*  
+- **repository_url**: _string_  
   The URL of the GitHub repository from which files are to be processed.
 
-- **file_paths**: *string*  
+- **file_paths**: _string_  
   A comma-delimited string of file paths that will be passed directly to the Repomix helper. The helper uses these file paths as an include filter.
 
 ## Feature and User Story Breakdown
@@ -21,47 +21,49 @@ Implement a new POST endpoint that accepts a JSON payload containing `repository
 
 #### Story 1.1: Backend API – Endpoint Creation
 
-- **Story Title:** Implement POST `/api/v1/repo-files` endpoint  
-- **Type:** Backend API story  
+- **Story Title:** Implement POST `/api/v1/repo-files` endpoint
+- **Type:** Backend API story
 - **User Story:**  
   **As a** backend developer,  
   **I want** to create a new POST endpoint at `/api/v1/repo-files` that accepts a JSON payload with `repository_url` and `file_paths`,  
   **so that** clients can submit repository data for XML conversion via the Repomix helper.
 - **Design / UX Consideration:**  
   The endpoint should follow RESTful design principles, returning standard HTTP status codes. It must also validate incoming data and use proper error handling.
-- **Testable Acceptance Criteria:**  
+- **Testable Acceptance Criteria:**
+
   - **Given** a valid JSON payload containing `repository_url` and `file_paths`,  
     **When** a POST request is made to `/api/v1/repo-files`,  
     **Then** the endpoint should respond with HTTP 200 and return the raw XML output from the Repomix helper.
-  
   - **Given** an invalid or missing payload,  
     **When** a POST request is made,  
     **Then** the endpoint should return an HTTP error status (e.g., 400 Bad Request) with a meaningful error message.
-- **Detailed Architecture Design Notes:**  
-  - Use Express.js (or the existing Node.js framework) to define the POST route.  
-  - Validate that the `repository_url` is a well-formed URL and that `file_paths` is a non-empty comma-delimited string.  
-  - Utilize middleware for JSON parsing and error handling.  
+
+- **Detailed Architecture Design Notes:**
+  - Use Express.js (or the existing Node.js framework) to define the POST route.
+  - Validate that the `repository_url` is a well-formed URL and that `file_paths` is a non-empty comma-delimited string.
+  - Utilize middleware for JSON parsing and error handling.
   - Ensure the endpoint remains stateless and directly returns the output from the Repomix helper.
 
 #### Story 1.2: Backend API – Configuration Initialization and Repomix Invocation
 
-- **Story Title:** Configure and invoke Repomix helper  
-- **Type:** Backend API story  
+- **Story Title:** Configure and invoke Repomix helper
+- **Type:** Backend API story
 - **User Story:**  
   **As a** backend developer,  
   **I want** to initialize the Repomix configuration using the provided `file_paths` and call the `executeRepomix` function with the `repository_url`,  
   **so that** the API processes the repository files and returns an XML representation.
 - **Design / UX Consideration:**  
   The configuration object must be dynamically generated to include the user-specified file paths. The output file (if used) should be managed appropriately—either stored temporarily or streamed back as part of the response.
-- **Testable Acceptance Criteria:**  
+- **Testable Acceptance Criteria:**
+
   - **Given** a POST request with valid input,  
     **When** the API builds the configuration object,  
     **Then** it should set the `include` key to an array containing the comma-delimited file paths exactly as received, and the rest of the configuration should match the specified options.
-  
   - **Given** the configuration object is correctly initialized,  
     **When** the `executeRepomix` helper is invoked with the repository URL and configuration,  
     **Then** it should return a valid XML output that is forwarded as the API response.
-- **Detailed Architecture Design Notes:**  
+
+- **Detailed Architecture Design Notes:**
   - Create a configuration object as follows (ensuring proper management of the output file):
     ```javascript
     const config = {
