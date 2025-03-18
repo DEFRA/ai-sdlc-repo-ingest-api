@@ -19,13 +19,13 @@ async function createRepomixConfig(repositoryUrl, outputFile) {
   const config = {
     output: {
       filePath: outputFile,
-      style: 'plain', // Use plain text format for API processing
+      style: 'xml',
       parsableStyle: false,
-      compress: false, // Don't compress code by default
+      compress: true,
       fileSummary: true,
       directoryStructure: true,
-      removeComments: false,
-      removeEmptyLines: false,
+      removeComments: true,
+      removeEmptyLines: true,
       showLineNumbers: true,
       copyToClipboard: false,
       includeEmptyDirectories: false

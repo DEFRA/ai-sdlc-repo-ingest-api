@@ -24,7 +24,7 @@ const repoIngestController = {
           .default(true),
         removeEmptyLines: Joi.boolean()
           .description('Whether to remove empty lines from the code')
-          .default(false)
+          .default(true)
       }).required(),
       failAction: (request, h, err) => {
         throw Boom.badRequest(`Validation error: ${err.message}`)
