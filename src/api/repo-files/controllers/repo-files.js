@@ -16,9 +16,10 @@ const repoFilesController = {
           .uri()
           .required()
           .description('GitHub repository URL'),
-        filePaths: Joi.string()
+        filePaths: Joi.array()
+          .items(Joi.string())
           .required()
-          .description('Comma-delimited string of file paths to include')
+          .description('Array of file paths to include')
       }).required(),
       failAction: (request, h, err) => {
         throw Boom.badRequest(`Validation error: ${err.message}`)

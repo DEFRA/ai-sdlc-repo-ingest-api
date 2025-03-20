@@ -107,12 +107,11 @@ export const executeRepomix = async (repositoryUrl, options = {}) => {
     }
 
     if (options.include !== undefined) {
-      // Handle include option as either string or array
-      if (typeof options.include === 'string') {
-        // If it's a comma-delimited string, split it into an array of file paths
-        config.include = options.include.split(',').map((path) => path.trim())
-      } else if (Array.isArray(options.include)) {
+      // Handle include option as array
+      if (Array.isArray(options.include)) {
         config.include = options.include
+      } else {
+        throw new Error('Include option must be an array of file paths')
       }
     }
 
